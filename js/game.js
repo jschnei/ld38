@@ -4,7 +4,8 @@ var PhaserGame = (function () {
         this.scaleToPlayer = function () {
             for (var _i = 0, _a = _this.objects.children; _i < _a.length; _i++) {
                 var object = _a[_i];
-                var tween = _this.game.add.tween(object.scale).to({ x: 0.5, y: 0.5 }, 1000);
+                var curScale = object.scale;
+                var tween = _this.game.add.tween(object.scale).to({ x: 0.5 * curScale.x, y: 0.5 * curScale.y }, 1000);
                 tween.start();
                 var midpoint = new PIXI.Point(0.5 * (object.position.x + _this.player.position.x), 0.5 * (object.position.y + _this.player.position.y));
                 tween = _this.game.add.tween(object).to(midpoint);
@@ -35,6 +36,8 @@ var PhaserGame = (function () {
                 var object = _this.objects.create(Math.random() * 600, Math.random() * 600, objectBMD);
                 object.body.immovable = true;
             }
+            var key = _this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+            key.onDown.add(_this.scaleToPlayer, _this);
         };
         this.update = function () {
             _this.game.debug.text(String(_this.game.time.fps), 2, 14, "#00ff00");
@@ -53,7 +56,6 @@ var PhaserGame = (function () {
             }
             else if (_this.cursors.down.isDown) {
                 _this.player.body.velocity.y = 150;
-                _this.scaleToPlayer();
             }
             else {
                 _this.player.body.velocity.y = 0;

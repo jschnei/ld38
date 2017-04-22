@@ -21,8 +21,8 @@ class PhaserGame {
 
     scaleToPlayer = () => {
         for(let object of this.objects.children){
-            
-            let tween = this.game.add.tween(object.scale).to({x: 0.5, y: 0.5}, 1000);
+            let curScale = object.scale;
+            let tween = this.game.add.tween(object.scale).to({x: 0.5*curScale.x, y: 0.5*curScale.y}, 1000);
             tween.start();
 
             let midpoint = new PIXI.Point(0.5*(object.position.x+this.player.position.x),0.5*(object.position.y+this.player.position.y));
@@ -62,6 +62,9 @@ class PhaserGame {
             object.body.immovable = true;
         }
 
+        let key = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+        key.onDown.add(this.scaleToPlayer, this);
+
     }
 
     update = () =>  {
@@ -81,7 +84,6 @@ class PhaserGame {
             this.player.body.velocity.y = -150;
         } else if (this.cursors.down.isDown){
             this.player.body.velocity.y = 150;
-            this.scaleToPlayer();
         } else {
             this.player.body.velocity.y = 0;
         }
